@@ -101,7 +101,7 @@ class MainLayout(GridLayout):
                 tile_location = total_count - 1  - (tiles_x-(index+1)) 
             else:
                 tile_location = index - tiles_x 
-        return tile_location
+        return self.get_tile_by_index(tile_location)
 
     def get_tile_by_index(self, index):
         return self.children[index]
@@ -110,24 +110,28 @@ class MainLayout(GridLayout):
         return self.children.index(tile)
 
     def get_all_tiles(self):
-        return self.children
+        on = [x for x in self.children if x.state=="on"]
+        tiles_list = []
+        for x in on:
+            tiles_list.extend(self.get_around_tiles(x))
+        tiles_list.extend(on)
+        return tiles_list
 
     def get_around_tiles(self, tile):
         top = self.get_tile_location("top", tile)
         bottom = self.get_tile_location("bottom", tile)
         right = self.get_tile_location("right", tile)
         left = self.get_tile_location("left", tile)
-        top_left = self.get_tile_location("left", self.get_tile_by_index(top))
-        top_right = self.get_tile_location("right", self.get_tile_by_index(top))
-        bottom_left = self.get_tile_location("left", self.get_tile_by_index(bottom))
-        bottom_right = self.get_tile_location("right", self.get_tile_by_index(bottom))
+        top_left = self.get_tile_location("left", top)
+        top_right = self.get_tile_location("right", top)
+        bottom_left = self.get_tile_location("left", bottom)
+        bottom_right = self.get_tile_location("right", bottom)
         return [top_left, top, top_right, right, bottom_right, bottom, bottom_left, left]
 
     def count_on_tiles(self, tile_list):
         on_list = []
         for tile in tile_list:
-            tile_obj = self.get_tile_by_index(tile)
-            if tile_obj.state == "on":
+            if tile.state == "on":
                 on_list.append(tile)
         return on_list
 
@@ -191,4 +195,5 @@ class MainLayout(GridLayout):
         self.pause()
         tiles = self.get_all_tiles()
         for tile in tiles:
+            # if tile.state=="on":
             tile.make_off()

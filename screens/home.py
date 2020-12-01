@@ -10,7 +10,7 @@ Builder.load_string(
     name: "Home"
     canvas.before:
         Color:
-            rgba: 1,1,1,1
+            rgba: 1,1,1,0.4
         RoundedRectangle:
             pos: self.pos
             size: self.size

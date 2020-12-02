@@ -3,6 +3,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import ListProperty, ObjectProperty, NumericProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock
+from classes.tools import timer
 
 Builder.load_string(
 
@@ -132,7 +133,6 @@ class MainLayout(GridLayout):
         return on_list
 
     def start_rules(self, *args):
-        start = time.time()
         all_tiles = self.get_all_tiles()
         recipe_for_next = {"on":[], "off": []}
         for tile in all_tiles:

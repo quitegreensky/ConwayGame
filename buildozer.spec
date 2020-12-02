@@ -52,7 +52,7 @@ android.api = 28
 
 #android.sdk = 20
 
-android.ndk = 21b
+#android.ndk = 21b
 
 [buildozer]
 

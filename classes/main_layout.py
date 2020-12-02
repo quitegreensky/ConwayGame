@@ -4,7 +4,6 @@ from kivy.properties import ListProperty, ObjectProperty, NumericProperty
 from kivy.uix.gridlayout import GridLayout
 from kivy.clock import Clock
 
-
 Builder.load_string(
 
     """
@@ -36,14 +35,14 @@ class Tile(BoxLayout):
         if not self.collide_point(*touch.pos):
             return False
         if self.state=="off":
-            self.make_on()
+            self.set_on()
         return super().on_touch_move(touch)
 
-    def make_on(self):
+    def set_on(self):
         self.bg_color = self.on_color
         self.state = "on"
     
-    def make_off(self):
+    def set_off(self):
         self.bg_color= self.off_color
         self.state = "off"
 
@@ -113,7 +112,7 @@ class MainLayout(GridLayout):
         on = [x for x in self.children if x.state=="on"]
         tiles_list = []
         for x in on:
-            tiles_list.extend(self.get_around_tiles(x))
+            tiles_list.extend([x for x in self.get_around_tiles(x) if x not in tiles_list])
         tiles_list.extend(on)
         return tiles_list
 
@@ -129,13 +128,11 @@ class MainLayout(GridLayout):
         return [top_left, top, top_right, right, bottom_right, bottom, bottom_left, left]
 
     def count_on_tiles(self, tile_list):
-        on_list = []
-        for tile in tile_list:
-            if tile.state == "on":
-                on_list.append(tile)
+        on_list = [x for x in tile_list if x.state=="on"]
         return on_list
 
     def start_rules(self, *args):
+        start = time.time()
         all_tiles = self.get_all_tiles()
         recipe_for_next = {"on":[], "off": []}
         for tile in all_tiles:
@@ -164,10 +161,10 @@ class MainLayout(GridLayout):
         to_be_off = recipe["off"]
         
         for on_tile in to_be_on:
-            on_tile.make_on()
+            on_tile.set_on()
 
         for off_tile in to_be_off:
-            off_tile.make_off()
+            off_tile.set_off()
 
     def on_touch_up(self, touch):
         if not self.collide_point(*touch.pos):
@@ -196,4 +193,4 @@ class MainLayout(GridLayout):
         tiles = self.get_all_tiles()
         for tile in tiles:
             # if tile.state=="on":
-            tile.make_off()
+            tile.set_off()

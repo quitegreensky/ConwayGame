@@ -122,34 +122,24 @@ class MainLayout(GridLayout):
     def get_around_tiles(self, tile):
         top = self.get_tile_location("top", tile)
         bottom = self.get_tile_location("bottom", tile)
-        right = self.get_tile_location("right", tile)
-        left = self.get_tile_location("left", tile)
-        top_left = self.get_tile_location("left", top)
-        top_right = self.get_tile_location("right", top)
-        bottom_left = self.get_tile_location("left", bottom)
-        bottom_right = self.get_tile_location("right", bottom)
-        return [
-            top_left,
+        return {
+            self.get_tile_location("left", top), #top left
             top,
-            top_right,
-            right,
-            bottom_right,
+            self.get_tile_location("right", top), #top right
+            self.get_tile_location("right", tile), # right
+            self.get_tile_location("right", bottom), #bottom right
             bottom,
-            bottom_left,
-            left,
-        ]
+            self.get_tile_location("left", bottom), #bottom left
+            self.get_tile_location("left", tile), # left
+        }
 
-    def count_on_tiles(self, tile_list):
-        on_list = set()
-        on_list = on_list.union({x for x in tile_list if x.state == "on"})
-        return on_list
-
+    @timer
     def start_rules(self, *args):
         all_tiles = self.get_all_tiles()
         recipe_for_next = {"on": set(), "off": set()}
         for tile in all_tiles:
             around_tiles = self.get_around_tiles(tile)
-            on_tiles = len(self.count_on_tiles(around_tiles))
+            on_tiles = len({x for x in around_tiles if x.state == "on"})
 
             # checking rule 1
             if tile.state == "on":

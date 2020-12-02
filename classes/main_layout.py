@@ -109,13 +109,14 @@ class MainLayout(GridLayout):
         return self.children.index(tile)
 
     def get_all_tiles(self):
-        on = [x for x in self.children if x.state == "on"]
-        tiles_list = []
+        on= set()
+        on = on.union({x for x in self.children if x.state == "on"})
+        tiles_list = set()
         for x in on:
-            tiles_list.extend(
-                [x for x in self.get_around_tiles(x) if x not in tiles_list]
+            tiles_list = tiles_list.union(
+                {x for x in self.get_around_tiles(x) if x not in tiles_list}
             )
-        tiles_list.extend(on)
+        tiles_list= tiles_list.union(on)
         return tiles_list
 
     def get_around_tiles(self, tile):
@@ -139,12 +140,13 @@ class MainLayout(GridLayout):
         ]
 
     def count_on_tiles(self, tile_list):
-        on_list = [x for x in tile_list if x.state == "on"]
+        on_list = set()
+        on_list = on_list.union({x for x in tile_list if x.state == "on"})
         return on_list
 
     def start_rules(self, *args):
         all_tiles = self.get_all_tiles()
-        recipe_for_next = {"on": [], "off": []}
+        recipe_for_next = {"on": set(), "off": set()}
         for tile in all_tiles:
             around_tiles = self.get_around_tiles(tile)
             on_tiles = len(self.count_on_tiles(around_tiles))
@@ -152,16 +154,16 @@ class MainLayout(GridLayout):
             # checking rule 1
             if tile.state == "on":
                 if on_tiles == self.max_on_tiles or on_tiles == self.min_on_tiles:
-                    recipe_for_next["on"].append(tile)
+                    recipe_for_next["on"].add(tile)
 
                 # rule 3
                 else:
-                    recipe_for_next["off"].append(tile)
+                    recipe_for_next["off"].add(tile)
 
             # rule two
             elif tile.state == "off":
                 if on_tiles == 3:
-                    recipe_for_next["on"].append(tile)
+                    recipe_for_next["on"].add(tile)
 
         self.apply_recipe(recipe_for_next)
 
@@ -201,5 +203,5 @@ class MainLayout(GridLayout):
         self.pause()
         tiles = self.get_all_tiles()
         for tile in tiles:
-            # if tile.state=="on":
-            tile.set_off()
+            if tile.state=="on":
+                tile.set_off()

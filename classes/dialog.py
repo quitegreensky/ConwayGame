@@ -25,11 +25,13 @@ Builder.load_string(
             halign: "left"
             valign: "top"
             markup:True
-    """)
+    """
+)
 
 
 class ModalBox(ModalView):
-    text = StringProperty("""
+    text = StringProperty(
+        """
 [b][size=20]- Conway's Game of Life [/size][/b]\n
 The Game of Life, also known simply as Life, is a cellular automaton devised by \
 the British mathematician John Horton Conway in 1970.It is a zero-player game, \
@@ -44,4 +46,5 @@ can simulate a universal constructor or any other Turing machine.\n
 [b]How to play?[/b]\n
 Simply draw your initial configuration and let it go! \
 Double tap to reset everything.
-    """)
+    """
+    )

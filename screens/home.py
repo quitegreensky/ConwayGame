@@ -18,11 +18,11 @@ Builder.load_string(
     MainLayout:
         size_hint: None,None
         size: app.root.size
-""")
+"""
+)
 
 
 class Home(Screen):
-    
     def on_enter(self, *args):
         dialog = ModalBox()
         dialog.open()
